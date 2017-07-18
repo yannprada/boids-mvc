@@ -1,22 +1,20 @@
 
 class UI {
   
-  PApplet parent;
   Flock flock;
+  ControlP5 cp5;
+  PVector sliderPosition;
+  
   final color BOID_FILL_COLOR = color(255, 99);
   final color BOID_STROKE_COLOR = color(255);
   
-  ControlP5 cp5;
   final PFont FONT = createFont("Arial", 16);
   final color LABEL_COLOR = color(255);
   final PVector SLIDER_SIZE = new PVector(100, 20);
   final float SLIDER_SPACING = 5;
-  PVector sliderPosition;
   
-  UI(PApplet p, Flock f) {
-    parent = p;
+  UI(PApplet parent, Flock f) {
     flock = f;
-    
     cp5 = new ControlP5(parent);
     sliderPosition = new PVector(5, 5);
     
