@@ -16,11 +16,19 @@ class Flock {
   final float FLEE_COEF = 1;
   final float FLEE_DIST = 150;
   
-  Flock(PVector topLeft, PVector botRight, PVector bs) {
+  Object[][] grid;
+  float resolution;
+  
+  Flock(PVector topLeft, PVector botRight, PVector bs, float res) {
     boids = new ArrayList<Boid>();
     boidSize = bs;
     topLeftBoundary = topLeft;
     bottomRightBoundary = botRight;
+    
+    resolution = res;
+    PVector boundariesSize = PVector.sub(bottomRightBoundary, topLeftBoundary);
+    PVector gridSize = getCellCoordinates(boundariesSize);
+    grid = new Object[int(gridSize.x) + 1][int(gridSize.y) + 1];
   }
   
   void addBoid(float x, float y) {
@@ -33,9 +41,38 @@ class Flock {
     }
   }
   
-  void run() {
+  PVector getCellCoordinates(PVector position) {
+    return new PVector(position.x / resolution, position.y / resolution);
+  }
+  
+  void initGrid() {
+    // clear
+    for (int x = 0; x < grid.length; x++) {
+      for (int y = 0; y < grid[0].length; y++) {
+        grid[x][y] = new ArrayList<Boid>();
+      }
+    }
+    
+    // populate
+    ArrayList<Boid> cell;
     for (Boid b: boids) {
-      b.flock(boids);
+      PVector coords = getCellCoordinates(b.position);
+      cell = (ArrayList<Boid>)grid[int(coords.x)][int(coords.y)];
+      cell.add(b);
+    }
+  }
+  
+  void flock(Boid boid) {
+    PVector coords = getCellCoordinates(boid.position);
+    ArrayList<Boid> cell = (ArrayList<Boid>)grid[int(coords.x)][int(coords.y)];
+    boid.flock(cell);
+  }
+  
+  void run() {
+    initGrid();
+    
+    for (Boid b: boids) {
+      flock(b);
       b.update();
       b.wrapBorders(topLeftBoundary, bottomRightBoundary);
     }

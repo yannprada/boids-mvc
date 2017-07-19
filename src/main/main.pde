@@ -9,7 +9,7 @@ void setup() {
   float x = min(width, height) / 200; // scale boids to window
   float y = x * 0.66;
   
-  flock = new Flock(new PVector(0, 0), new PVector(width, height), new PVector(x, y));
+  flock = new Flock(new PVector(0, 0), new PVector(width, height), new PVector(x, y), 200);
   flock.generateBoids(width/2, height/2, 100);
   
   ui = new UI(this, flock);
