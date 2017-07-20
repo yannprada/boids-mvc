@@ -5,6 +5,7 @@ UI ui;
 
 void setup() {
   fullScreen();
+  frameRate(120);
   
   float x = min(width, height) / 200; // scale boids to window
   float y = x * 0.66;
@@ -20,6 +21,7 @@ void draw() {
   
   flock.run();
   ui.displayFlock();
+  ui.displayUI();
   
   if (mousePressed) {
     switch(mouseButton) {
@@ -31,5 +33,13 @@ void draw() {
         flock.addBoid(mouseX, mouseY);
         break;
     }
+  }
+}
+
+void keyPressed() {
+  if (key == ' ') {
+    ui.toggleUI();
+  } else if (key == 'b') {
+    flock.binLatticeMode = !flock.binLatticeMode;
   }
 }

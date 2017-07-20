@@ -18,6 +18,7 @@ class Flock {
   
   Object[][] grid;
   float resolution;
+  boolean binLatticeMode = true;
   
   Flock(PVector topLeft, PVector botRight, PVector bs, float res) {
     boids = new ArrayList<Boid>();
@@ -63,14 +64,19 @@ class Flock {
   }
   
   void flock(Boid boid) {
-    PVector coords = getCellCoordinates(boid.position);
-    ArrayList<Boid> cell = (ArrayList<Boid>)grid[int(coords.x)][int(coords.y)];
-    boid.flock(cell);
+    if (binLatticeMode) {
+      PVector coords = getCellCoordinates(boid.position);
+      ArrayList<Boid> cell = (ArrayList<Boid>)grid[int(coords.x)][int(coords.y)];
+      boid.flock(cell);
+    } else {
+      boid.flock(boids);
+    }
   }
   
   void run() {
-    initGrid();
-    
+    if (binLatticeMode) {
+      initGrid();
+    }
     for (Boid b: boids) {
       flock(b);
       b.update();
@@ -85,9 +91,8 @@ class Flock {
     }
   }
   
-  ArrayList<Boid> getBoids() {
-    return boids;
-  }
+  ArrayList<Boid> getBoids() { return boids; }
+  int getBoidsCount() { return boids.size(); }
   
   void setMass(float mass) {
     for (Boid b: boids) {

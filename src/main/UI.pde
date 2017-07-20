@@ -13,6 +13,8 @@ class UI {
   final PVector SLIDER_SIZE = new PVector(100, 20);
   final float SLIDER_SPACING = 5;
   
+  boolean showUI = true;
+  
   UI(PApplet parent, Flock f) {
     flock = f;
     cp5 = new ControlP5(parent);
@@ -20,6 +22,8 @@ class UI {
     
     createLabel("Left click: repulse boids");
     createLabel("Right click: add boids");
+    createLabel("Spacebar: toggle UI");
+    createLabel("b: toggle bin-lattice mode");
     incPosition();
     createLabel("Misc");
     createSlider(flock, "setMass", "mass", 0.1, 5, flock.BOID_MASS);
@@ -92,5 +96,26 @@ class UI {
     noStroke();
     ellipseMode(RADIUS);
     ellipse(x, y, flock.FLEE_DIST, flock.FLEE_DIST);
+  }
+  
+  void displayUI() {
+    if (showUI) {
+      fill(0, 255, 0, 95);
+      textSize(32);
+      textAlign(RIGHT);
+      String s = "bin-lattice spatial subdivision mode: ";
+      s += (flock.binLatticeMode ? "ON" : "OFF");
+      s += " | boids: " + flock.getBoidsCount() + " | FPS: " + int(frameRate);
+      text(s, width-5, 30);
+    }
+  }
+  
+  void toggleUI() {
+    showUI = !showUI;
+    if (showUI) {
+      cp5.show();
+    } else {
+      cp5.hide();
+    }
   }
 }
